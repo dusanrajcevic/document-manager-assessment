@@ -49,3 +49,20 @@ class FileVersionsTest(APITestCase):
         self.assertEqual(files.count(), 3)
         self.assertEqual(files[2].file_name, "example.txt")
         self.assertEqual(files[2].version_number, 3)
+
+    def test_file_version_retrieve(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(f"/api/file_versions/{self.file_v1.id}/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["file_name"], self.file_v1.file_name)
+
+    def test_file_version_retrieve_access_denied(self):
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.get(f"/api/file_versions/{self.file_v1.id}/")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_file_version_list(self):
+        response = self.client.get("/api/file_versions/?file_path=/documents/example.txt")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # 2 versions for the same file path
+        self.assertEqual(len(response.data), 2)

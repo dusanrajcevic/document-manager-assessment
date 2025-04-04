@@ -55,10 +55,10 @@ class User(AbstractUser):
 
 
 class FileVersion(models.Model):
-    file_name = models.fields.CharField(max_length=512)
-    version_number = models.fields.IntegerField(default=0)
+    file_name = models.CharField(max_length=512)
+    version_number = models.IntegerField(default=0)
     file_content = models.FileField(upload_to="documents/")
-    file_path = models.fields.CharField(max_length=512)
+    file_path = models.CharField(max_length=512)
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)  # Restrict to uploader
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
@@ -72,7 +72,6 @@ class FileVersion(models.Model):
                 uploaded_by=self.uploaded_by
             ).aggregate(models.Max('version_number'))['version_number__max']
 
-            print('Max version:', max_version)
             self.version_number = (max_version or 0) + 1
 
         super().save(*args, **kwargs)

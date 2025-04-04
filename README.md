@@ -2,6 +2,21 @@
 The Propylon Document Management Technical Assessment is a web application consisting of:
 * A Django/DRF API backend for document management.
 * A React frontend for user interaction.
+---
+## Table of Contents
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Backend API](#backend-api)
+  - [Frontend Client Development](#frontend-client-development)
+  - [Testing](#testing)
+  - [Managing the app](#managing-the-app)
+  - [API Endpoints](#api-endpoints)
+  - [Debugging (Development Only)](#debugging-development-only)
+  - [Admin Interface](#admin-interface)
+  - [Project Highlights](#project-highlights)
+  - [Known Issues and Future Improvements](#known-issues-and-future-improvements)
+  - [References](#references)
+  - [License](#license)
 
 ---
 This project is designed as a bootstrap for implementing specific features outlined in the assignment.
@@ -40,6 +55,8 @@ Build the virtual environment:
 ```
 
 #### Load sample data
+This command will load sample data into the database, including a superuser account.
+Follow the prompt for the superuser credentials.
 ```bash
     make fixtures
 ```
@@ -86,10 +103,11 @@ npm start
 
 The React client will run on http://localhost:3000 by default.
 
-#### Additional Notes
+### Additional Notes
 N/A
 
-### Testing
+---
+## Testing
 **Backend Tests:** Run the backend test suite with:
 ```bash
     make test
@@ -98,22 +116,70 @@ N/A
 **Frontend Tests:** To be implemented
 
 ---
-### Project Highlights
+## Managing the app
+
+### API Endpoints
+The API endpoints are defined in the `urls.py` file of the Django app. The main endpoints include:
+
+#### Admin Interface
+- **URL:** `/admin/`
+- **Description:** Access the admin panel for managing models.
+
+#### File Versions API
+- **Base URL:** `/api/file_versions/`
+- **Description:** Endpoints for managing file versions.
+
+#### Actions:
+- **GET** `/api/file_versions/`
+  - List all file versions.
+  - Optional: Filter by `file_path` (e.g., `/api/file_versions/?file_path=/example/path`).
+- **GET** `/api/file_versions/<id>/`
+  - Retrieve a specific file version by `id`.
+- **POST** `/api/file_versions/`
+  - Create a new file version.
+  - **Request Body:** 
+    - `file_name` (string)
+    - `file_path` (string)
+    - `file_content` (file)
+- **Permissions:** Authenticated users only.
+
+### Authentication
+**Session-Based Authentication**
+- **URL:** `/api-auth/` 
+- **Description:** Login and session authentication endpoints provided by DRF.
+- **Token-Based Authentication**
+- **URL:** `/auth-token/`
+- **Description:** Obtain tokens for secure API requests.
+
+### Debugging (Development Only)
+**Debug Toolbar**
+- **URL:** `/__debug__/`
+- **Description:** Debugging interface available during development.
+
+### Admin Interface
+The Django admin interface is available at:
+```
+http://localhost:8001/admin
+```
+Login with the superuser credentials created during the setup.
+
+---
+## Project Highlights
 * Modular Design: Separation of concerns between the API backend and the React frontend.
 * Authentication: Powered by django-allauth, supporting secure login and user management.
 * Custom User Model: Uses email as the unique identifier.
 * Admin Interface: Manage users and file versions directly via the Django admin.
 
 ---
-### Known Issues and Future Improvements
+## Known Issues and Future Improvements
 N/A
 
 ---
-### References
+## References
 * [Django/DRF Documentation](https://www.django-rest-framework.org/)
 * [Create React App Documentation](https://create-react-app.dev/)
 * [Cookiecutter Django](https://github.com/cookiecutter/cookiecutter-django)
 
 ---
-### License
+## License
 This project is for assessment purposes and no additional license is provided.

@@ -65,3 +65,14 @@ class FileVersion(models.Model):
     def __str__(self):
         return f"{self.file_name} (Revision {self.version_number})"
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            max_version = FileVersion.objects.filter(
+                file_name=self.file_name,
+                uploaded_by=self.uploaded_by
+            ).aggregate(models.Max('version_number'))['version_number__max']
+
+            print('Max version:', max_version)
+            self.version_number = (max_version or 0) + 1
+
+        super().save(*args, **kwargs)

@@ -5,7 +5,14 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
+    """
+    Custom manager for User model with no username field.
+    """
+
     def create_user(self, email, password=None, **extra_fields):
+        """
+        Create and return a regular user with an email and password.
+        """
         if not email:
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
@@ -15,6 +22,9 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
+        """
+        Create and return a superuser with an email and password.
+        """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 

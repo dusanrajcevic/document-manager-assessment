@@ -6,3 +6,6 @@ class FileVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileVersion
         fields = "__all__"
+        extra_kwargs = {
+            "uploaded_by": {"required": False},
+        }

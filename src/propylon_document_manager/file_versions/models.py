@@ -56,4 +56,12 @@ class User(AbstractUser):
 
 class FileVersion(models.Model):
     file_name = models.fields.CharField(max_length=512)
-    version_number = models.fields.IntegerField()
+    version_number = models.fields.IntegerField(default=0)
+    file_content = models.FileField(upload_to="documents/")
+    file_path = models.fields.CharField(max_length=512)
+    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)  # Restrict to uploader
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.file_name} (Revision {self.version_number})"
+

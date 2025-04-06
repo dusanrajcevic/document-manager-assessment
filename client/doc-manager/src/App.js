@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import FileDetails from './Components/FileDetails';
+import FileVersions from './Components/FileVersions';
 import Login from "./Components/Login";
 import Logout from "./Components/Logout";
 import Navigation from "./Components/Layout/Navigation";
+import FileUpload from "./Components/FileUpload";
 
 function App() {
     // Fetch the CSRF token when the app loads
@@ -26,6 +27,7 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/" element={<FileVersions/>}/>
+                    <Route path="/upload" element={<FileUpload />} />
                     <Route path="/logout" element={<Logout/>}/>
                 </Routes>
             </main>

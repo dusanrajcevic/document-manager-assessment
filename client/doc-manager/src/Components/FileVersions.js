@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import "./../Styles/FileVersions.css"
 
 const FileVersions = () => {
-    const url = "http://localhost:8001"
+    const url = "http://localhost:8001/documents"
     const [fileVersions, setFileVersions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

@@ -1,8 +1,6 @@
-import './App.css';
-import FileVersions from './FileVersions'
-
 import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import FileDetails from './Components/FileDetails';
 import Login from "./Components/Login";
 import Logout from "./Components/Logout";
 import Navigation from "./Components/Layout/Navigation";
@@ -27,6 +25,7 @@ function App() {
             <main>
                 <Routes>
                     <Route path="/login" element={<Login/>}/>
+                    <Route path="/" element={<FileVersions/>}/>
                     <Route path="/logout" element={<Logout/>}/>
                 </Routes>
             </main>

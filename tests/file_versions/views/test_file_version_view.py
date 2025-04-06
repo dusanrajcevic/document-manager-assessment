@@ -46,5 +46,6 @@ def test_file_version_retrieve_by_hash(api_client, user):
     response = api_client.get(url)
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.data["id"] == versions[0].id
-    assert response.data["file_hash"]
+    assert response.data["version_number"] == versions[0].version_number
+    assert response.data["file_hash"] == file_hash
+    assert response.data["file"]["id"] == versions[0].id

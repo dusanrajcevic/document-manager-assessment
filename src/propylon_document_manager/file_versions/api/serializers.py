@@ -32,9 +32,11 @@ class FileSerializer(serializers.ModelSerializer):
 
 
 class FileVersionSerializer(serializers.ModelSerializer):
+    file = FileSerializer()
+
     class Meta:
         model = FileVersion
-        fields = "__all__"
+        fields = "version_number", "file_hash", "uploaded_at", "file"
         extra_kwargs = {
             "uploaded_by": {"required": False},
             "file": {"required": True},

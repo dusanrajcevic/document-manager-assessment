@@ -61,9 +61,8 @@ class FileVersionViewSet(RetrieveModelMixin, ListModelMixin, CreateModelMixin, G
         file_id = self.request.query_params.get("file")
 
         if file_id:
-            return FileVersion.objects.filter(file_id=file_id)
-
-        return FileVersion.objects.all()
+            return FileVersion.objects.select_related('file').filter(file_id=file_id)
+        return FileVersion.objects.select_related('file').all()
 
     @action(detail=False, methods=["get"], url_path="by-hash/(?P<file_hash>[^/.]+)")
     def retrieve_by_hash(self, request, file_hash=None):

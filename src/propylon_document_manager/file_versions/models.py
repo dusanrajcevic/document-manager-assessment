@@ -4,6 +4,7 @@ from django.db.models import CharField, EmailField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+
 class CustomUserManager(BaseUserManager):
     """
     Custom manager for User model with no username field.
@@ -35,6 +36,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email=email, password=password, **extra_fields)
 
+
 class User(AbstractUser):
     """
     Default custom user model for Propylon Document Manager.
@@ -64,24 +66,28 @@ class User(AbstractUser):
         return reverse("users:detail", kwargs={"pk": self.id})
 
 
-class FileVersion(models.Model):
+class File(models.Model):
     file_name = models.CharField(max_length=512)
-    version_number = models.IntegerField(default=0)
-    file_content = models.FileField(upload_to="documents/")
     file_path = models.CharField(max_length=512)
-    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)  # Restrict to uploader
+    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('file_path', 'uploaded_by')
+
     def __str__(self):
-        return f"{self.file_name} (Revision {self.version_number})"
+        return f"{self.file_path} owned by {self.uploaded_by.email}"
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            max_version = FileVersion.objects.filter(
-                file_name=self.file_name,
-                uploaded_by=self.uploaded_by
-            ).aggregate(models.Max('version_number'))['version_number__max']
 
-            self.version_number = (max_version or 0) + 1
+class FileVersion(models.Model):
+    file = models.ForeignKey(File, related_name='versions', on_delete=models.CASCADE)
+    version_number = models.IntegerField()
+    file_content = models.FileField(upload_to="documents/")
+    file_hash = models.CharField(max_length=64, unique=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
-        super().save(*args, **kwargs)
+    class Meta:
+        unique_together = ('file', 'version_number')
+
+    def __str__(self):
+        return f"{self.file.file_name} (Revision {self.version_number}, Hash: {self.file_hash[:8]})"

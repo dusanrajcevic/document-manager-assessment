@@ -5,6 +5,7 @@ import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from "./Components/Login";
 import Logout from "./Components/Logout";
+import Navigation from "./Components/Layout/Navigation";
 
 function App() {
     // Fetch the CSRF token when the app loads
@@ -20,6 +21,9 @@ function App() {
     }, []);
     return (
         <Router>
+            <header>
+                <Navigation />
+            </header>
             <main>
                 <Routes>
                     <Route path="/login" element={<Login/>}/>

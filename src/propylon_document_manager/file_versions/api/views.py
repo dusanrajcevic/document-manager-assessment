@@ -1,3 +1,4 @@
+from django.http import FileResponse
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
@@ -104,5 +105,10 @@ def serve_file_version(request, file_path=None):
     except FileVersion.DoesNotExist:
         return Response({"detail": "File not found or revision does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = FileVersionSerializer(file_version)
-    return Response(serializer.data)
+    if not file_version:
+        return Response({"detail": "Empty file content"}, status=status.HTTP_200_OK)
+
+    file_path_on_disk = file_version.file_content.path
+    response = FileResponse(open(file_path_on_disk, "rb"), as_attachment=True)
+    response["Content-Disposition"] = f'attachment; filename="{file.file_name}.txt"'  # Set the download file name
+    return response

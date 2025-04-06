@@ -2,15 +2,10 @@ import './App.css';
 import FileVersions from './FileVersions'
 
 import React, {useEffect} from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from "./Components/Login";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <FileVersions />
-      </header>
-    </div>
-  );
     // Fetch the CSRF token when the app loads
     useEffect(() => {
         const fetchCsrfToken = async () => {
@@ -22,6 +17,15 @@ function App() {
 
         fetchCsrfToken();
     }, []);
+    return (
+        <Router>
+            <main>
+                <Routes>
+                    <Route path="/login" element={<Login/>}/>
+                </Routes>
+            </main>
+        </Router>
+    );
 }
 
 export default App;

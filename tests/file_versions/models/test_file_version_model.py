@@ -36,7 +36,11 @@ def test_set_file_hash_signal(user, file):
     file_content = SimpleUploadedFile("example.txt", b"Test file content")
     file_version = FileVersion.objects.create(file=file, file_content=file_content)
 
-    expected_hash = hashlib.sha256(b"Test file content").hexdigest()
+    hasher = hashlib.sha256()
+    hasher.update(b"Test file content")
+    hasher.update(str(file_version.file.uploaded_by.id).encode())
+
+    expected_hash = hasher.hexdigest()
     assert file_version.file_hash == expected_hash
 
 

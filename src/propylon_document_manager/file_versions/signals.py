@@ -11,6 +11,11 @@ def set_file_hash(sender, instance, **kwargs):
         hasher = hashlib.sha256()
         for chunk in instance.file_content.chunks():
             hasher.update(chunk)
+
+        user_id = str(instance.file.uploaded_by_id) if instance.file and instance.file.uploaded_by_id else 'anonymous'
+
+        hasher.update(user_id.encode())
+
         instance.file_hash = hasher.hexdigest()
 
 

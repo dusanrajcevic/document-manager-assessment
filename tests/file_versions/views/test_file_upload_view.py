@@ -25,7 +25,12 @@ def test_file_upload(api_client, user):
 
     assert response.status_code == status.HTTP_201_CREATED
 
+
+    hasher = hashlib.sha256()
+    hasher.update(file_content)
+    hasher.update(str(user.id).encode())
+
     assert response_data['file_name'] == file_name
     assert response_data['file_path'] == file_path
     assert response_data['version_number'] == 1
-    assert response_data['file_hash'] == hashlib.sha256(file_content).hexdigest()
+    assert response_data['file_hash'] == hasher.hexdigest()

@@ -9,8 +9,9 @@ import FileUpload from "./Components/FileUpload";
 function App() {
     // Fetch the CSRF token when the app loads
     useEffect(() => {
+        const baseUrl = process.env.REACT_APP_API_BASE_URL;
         const fetchCsrfToken = async () => {
-            let response = await fetch("http://127.0.0.1:8001/api-auth/login/", {
+            await fetch(`${baseUrl}/api-auth/login/`, {
                 method: "GET",
                 credentials: "include", // Include cookies
             });

@@ -6,6 +6,7 @@ const UploadFile = () => {
     const [fileName, setFileName] = useState("");
     const [filePath, setFilePath] = useState("");
     const [uploadStatus, setUploadStatus] = useState("");
+    const url = `${process.env.REACT_APP_API_BASE_URL}/api/upload/`;
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -26,7 +27,7 @@ const UploadFile = () => {
         formData.append("file_path", filePath);
 
         try {
-            const response = await fetch("http://127.0.0.1:8001/api/upload/", {
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Authorization": `Token ${token}`,
@@ -50,7 +51,7 @@ const UploadFile = () => {
     return (
         <div className="file-upload-container">
             <h1>Upload File</h1>
-            <form action="http://127.0.0.1:8001/api/upload/"
+            <form action={url}
                   method="post"
                   encType="multipart/form-data">
                 <input

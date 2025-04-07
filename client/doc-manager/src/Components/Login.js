@@ -1,22 +1,9 @@
 import React, {useState} from "react";
 import './../Styles/Login.css';
-
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(name + "=")) {
-        cookieValue = cookie.substring(name.length + 1);
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
+import getCookie from "../Utils/Cookie";
 
 const Login = () => {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -25,12 +12,10 @@ const Login = () => {
         e.preventDefault();
         setError("");
         try {
-            const csrfToken = getCookie("csrftoken");
-            const response = await fetch("http://127.0.0.1:8001/auth-token/", {
+            const response = await fetch(`${baseUrl}/auth-token/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "X-CSRFToken": csrfToken,
                 },
                 body: new URLSearchParams({
                     username: email,

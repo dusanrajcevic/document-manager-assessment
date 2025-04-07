@@ -1,18 +1,19 @@
 import React, {useState, useEffect} from "react";
 import "./../Styles/FileVersions.css"
+import downloadFileAsBlob from "../Utils/DownloadFileAsBlob"
 
 const FileVersions = () => {
-    const url = "http://localhost:8001/documents"
+    const baseUrl = process.env.REACT_APP_API_BASE_URL
+    const url = `${baseUrl}/documents`
     const [fileVersions, setFileVersions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchFileVersions = async () => {
             try {
                 const token = localStorage.getItem("token");
 
-                const response = await fetch("http://127.0.0.1:8001/api/file_versions/", {
+                const response = await fetch(`${baseUrl}/api/file_versions/`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -34,14 +35,18 @@ const FileVersions = () => {
         };
 
         fetchFileVersions();
-    }, []);
+    }, [baseUrl]);
+
+    const handleClick = (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const fileUrl = e.target.getAttribute('href');
+        const fileName = e.target.innerText.split('/').pop();
+        downloadFileAsBlob(fileUrl, fileName, token);
+    }
 
     if (loading) {
         return <p>Loading file versions...</p>;
-    }
-
-    if (error) {
-        return <p>Error: {error}</p>;
     }
 
     return (
@@ -65,7 +70,8 @@ const FileVersions = () => {
                         <tr key={version.id}>
                             <td>{version.id}</td>
                             <td>{version.version_number}</td>
-                            <td><a href={url + version.file.file_path} target="_blank">{version.file.file_path}</a></td>
+                            <td><a href={url + version.file.file_path + (version.version_number > 1 ? `?revision=${version.version_number}` : '') }
+                                   onClick={handleClick}>{version.file.file_path}</a></td>
                             <td>{version.file_hash}</td>
                             <td>{new Date(version.uploaded_at).toLocaleString()}</td>
                         </tr>

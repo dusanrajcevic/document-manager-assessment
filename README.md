@@ -16,7 +16,6 @@ The Propylon Document Management Technical Assessment is a web application consi
   - [Project Highlights](#project-highlights)
   - [Known Issues and Future Improvements](#known-issues-and-future-improvements)
   - [References](#references)
-  - [License](#license)
 
 ---
 This project is designed as a bootstrap for implementing specific features outlined in the assignment.
@@ -96,6 +95,11 @@ Install dependencies:
     npm install
 ```
 
+Copy the `.env.example` file to `.env` and set the `REACT_APP_API_URL` to point to the backend API:
+```bash
+    cp .env.example .env
+```
+
 Start the React development server:
 ```bash
 npm start
@@ -103,17 +107,12 @@ npm start
 
 The React client will run on http://localhost:3000 by default.
 
-### Additional Notes
-N/A
-
 ---
 ## Testing
 **Backend Tests:** Run the backend test suite with:
 ```bash
     make test
 ```
-
-**Frontend Tests:** To be implemented
 
 ---
 ## Managing the app
@@ -169,10 +168,22 @@ Login with the superuser credentials created during the setup.
 * Authentication: Powered by django-allauth, supporting secure login and user management.
 * Custom User Model: Uses email as the unique identifier.
 * Admin Interface: Manage users and file versions directly via the Django admin.
+* File Uploads: Supports file uploads with versioning.
 
 ---
 ## Known Issues and Future Improvements
-N/A
+File uploads are currently prohibited to be with the same file name and same content.
+This is a limitation of the current implementation. Future improvements could include:
+* Implementing a more robust file versioning system.
+* Addition of unit tests for the frontend.
+* Implementation of a more user-friendly file upload interface.
+* Enhancement of error handling and user feedback in the frontend.
+* Implementation of a more sophisticated authentication mechanism (e.g., JWT).
+* Addition of a more comprehensive API documentation.
+* Implementation of a caching mechanism for file retrieval to improve performance.
+* Integration with a cloud storage solution for file management.
+* Implementation of a search functionality for files.
+* Improvement of the UI/UX for better user experience.
 
 ---
 ## References

@@ -11,15 +11,21 @@ class FileUploadSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context['request'].user
 
-        file = File.objects.create(
-            file_name=validated_data['file_name'],
-            file_path=validated_data['file_path'],
-            uploaded_by=user
+        file_name = validated_data['file_name']
+        file_content = validated_data['file']
+        file_path = validated_data['file_path']
+        if not file_path.startswith('/'):
+            file_path = '/' + file_path
+
+        file, created = File.objects.get_or_create(
+            file_path=file_path,
+            uploaded_by=user,
+            defaults={'file_name': file_name}
         )
 
         file_version = FileVersion.objects.create(
             file=file,
-            file_content=validated_data['file'],
+            file_content=file_content
         )
 
         return file_version

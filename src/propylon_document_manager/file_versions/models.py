@@ -18,7 +18,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        user.password = password
         user.save(using=self._db)
         return user
 
@@ -55,6 +55,13 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+    def save(self, *args, **kwargs):
+        """
+        Override save method to ensure email is always in lowercase.
+        """
+        self.set_password(self.password)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
         """Get URL for user's detail view.

@@ -272,9 +272,13 @@ tags
 dump.rdb
 
 ### Project template
-propylon_document_manager/media/
+src/propylon_document_manager/media
+src/propylon_document_manager/static
 
 .pytest_cache/
 
 ### DB
 *.sqlite*
+
+### IDE
+.idea/

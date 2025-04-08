@@ -139,7 +139,7 @@ The API endpoints are defined in the `urls.py` file of the Django app. The main 
   - **Request Body:** 
     - `file_name` (string)
     - `file_path` (string)
-    - `file_content` (file)
+    - `file` (file)
 - **Permissions:** Authenticated users only.
 
 ### Authentication

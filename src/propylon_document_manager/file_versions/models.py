@@ -58,7 +58,7 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         """
-        Override save method to ensure email is always in lowercase.
+        Override save method to ensure password is hashed.
         """
         self.set_password(self.password)
         super().save(*args, **kwargs)

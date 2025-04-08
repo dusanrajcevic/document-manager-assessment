@@ -7,23 +7,26 @@ from .models import FileVersion
 
 @receiver(pre_save, sender=FileVersion)
 def set_file_hash(sender, instance, **kwargs):
-    if not instance.file_hash and instance.file_content:
-        hasher = hashlib.sha256()
-        for chunk in instance.file_content.chunks():
-            hasher.update(chunk)
+    if instance.file_hash or not instance.file_content:
+        return
 
-        user_id = str(instance.file.uploaded_by_id) if instance.file and instance.file.uploaded_by_id else 'anonymous'
+    hasher = hashlib.sha256()
+    for chunk in instance.file_content.chunks():
+        hasher.update(chunk)
 
-        hasher.update(user_id.encode())
+    user_id = str(instance.file.uploaded_by_id) if instance.file and instance.file.uploaded_by_id else 'anonymous'
+    hasher.update(user_id.encode())
 
-        instance.file_hash = hasher.hexdigest()
+    instance.file_hash = hasher.hexdigest()
 
 
 @receiver(pre_save, sender=FileVersion)
 def set_version_number(sender, instance, **kwargs):
-    if not instance.version_number:
-        last_version = FileVersion.objects.filter(file=instance.file).order_by('-version_number').first()
-        if last_version:
-            instance.version_number = last_version.version_number + 1
-        else:
-            instance.version_number = 1
+    if instance.version_number:
+        return
+
+    last_version = (FileVersion.objects
+                    .filter(file=instance.file)
+                    .order_by('-version_number')
+                    .first())
+    instance.version_number = last_version.version_number + 1 if last_version else 1

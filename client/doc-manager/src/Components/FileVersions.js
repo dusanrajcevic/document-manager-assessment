@@ -70,7 +70,7 @@ const FileVersions = () => {
                         <tr key={version.id}>
                             <td>{version.id}</td>
                             <td>{version.version_number}</td>
-                            <td><a href={url + version.file.file_path + (version.version_number > 1 ? `?revision=${version.version_number}` : '') }
+                            <td><a href={url + version.file.file_path + `?revision=${version.version_number}` }
                                    onClick={handleClick}>{version.file.file_path}</a></td>
                             <td>{version.file_hash}</td>
                             <td>{new Date(version.uploaded_at).toLocaleString()}</td>

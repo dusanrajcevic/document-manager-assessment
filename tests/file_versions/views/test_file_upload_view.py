@@ -31,6 +31,38 @@ def test_file_upload_higher_version(api_client, user, file_with_versions):
         version_number=4
     )
 
+def test_duplicate_file_upload_same_user(api_client, user):
+    file_name = "duplicate.txt"
+    file_path = "/documents/duplicate.txt"
+    file_content = b"identical file content"
+
+    file_upload_and_assert(
+        api_client=api_client,
+        user=user,
+        file_name=file_name,
+        file_path=file_path,
+        file_content=file_content,
+        version_number=1,
+    )
+
+    file = SimpleUploadedFile(name=file_name, content=file_content)
+    api_client.force_authenticate(user=user)
+
+    file_data = {
+        "file_name": file_name,
+        "file_path": file_path,
+        "file": file,
+    }
+    response = api_client.post(
+        path="/api/upload/",
+        data=file_data,
+        format="multipart"
+    )
+
+    assert response.status_code == status.HTTP_409_CONFLICT
+    assert response.data["detail"] == 'This file already exists. Duplicate uploads are not allowed.'
+
+
 
 def file_upload_and_assert(api_client, user, file_name, file_path, file_content, version_number):
     """

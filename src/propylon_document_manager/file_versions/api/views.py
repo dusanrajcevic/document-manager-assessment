@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.http import FileResponse
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework import status
@@ -33,7 +34,14 @@ class FileUploadViewSet(CreateModelMixin, GenericViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        file_version = serializer.save()
+
+        try:
+            file_version = serializer.save()
+        except IntegrityError:
+            return Response(
+                {"detail": "This file already exists. Duplicate uploads are not allowed."},
+                status=status.HTTP_409_CONFLICT,
+            )
 
         response_data = {
             "file_name": file_version.file.file_name,

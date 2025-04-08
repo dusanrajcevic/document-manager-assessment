@@ -6,6 +6,7 @@ const UploadFile = () => {
     const [fileName, setFileName] = useState("");
     const [filePath, setFilePath] = useState("");
     const [uploadStatus, setUploadStatus] = useState("");
+    const [errorStatus, setErrorStatus] = useState("");
     const url = `${process.env.REACT_APP_API_BASE_URL}/api/upload/`;
 
     const handleFileChange = (event) => {
@@ -14,8 +15,10 @@ const UploadFile = () => {
 
     const handleUpload = async (e) => {
         e.preventDefault()
+        setErrorStatus('');
+        setUploadStatus('');
         if (!file || !fileName || !filePath) {
-            setUploadStatus("Please fill all fields and select a file before uploading.");
+            setErrorStatus("Please fill all fields and select a file before uploading.");
             return;
         }
 
@@ -40,11 +43,11 @@ const UploadFile = () => {
                 setUploadStatus(`File uploaded successfully! Version: ${responseData.version_number}`);
             } else {
                 const errorData = await response.json();
-                setUploadStatus(`Upload failed: ${JSON.stringify(errorData)}`);
+                setErrorStatus(`Upload failed: ${errorData.detail}`);
             }
         } catch (error) {
             console.error("Error uploading file:", error);
-            setUploadStatus("An error occurred during upload.");
+            setErrorStatus("An error occurred during upload.");
         }
     };
 
@@ -68,7 +71,8 @@ const UploadFile = () => {
                 />
                 <input type="file" onChange={handleFileChange}/>
                 <button onClick={handleUpload}>Upload</button>
-                <p>{uploadStatus}</p>
+                {uploadStatus && <p className="success-message">{uploadStatus}</p>}
+                {errorStatus && <p className="error-message">{errorStatus}</p>}
             </form>
         </div>
     );

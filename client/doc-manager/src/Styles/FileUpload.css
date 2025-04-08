@@ -31,3 +31,7 @@
 .file-upload-container>form>button:active {
   background-color:#037;
 }
+
+.error-message {
+  color:red;
+}

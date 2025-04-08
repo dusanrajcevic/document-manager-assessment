@@ -5,10 +5,38 @@ from rest_framework import status
 
 
 def test_file_upload(api_client, user):
-    file_name = "example_v3.txt"
-    file_path = "/documents/example_v3.txt"
+    file_name = "example.txt"
+    file_path = "/documents/example.txt"
+    file_content = b"test file content for version 1"
+    file_upload_and_assert(
+        api_client=api_client,
+        user=user,
+        file_name=file_name,
+        file_path=file_path,
+        file_content=file_content,
+        version_number=1
+    )
+
+
+def test_file_upload_higher_version(api_client, user, file_with_versions):
+    file_name = file_with_versions.file_name
+    file_path = file_with_versions.file_path
     file_content = b"test file content for version 3"
-    file = SimpleUploadedFile(file_name, b"test file content for version 3")
+    file_upload_and_assert(
+        api_client=api_client,
+        user=user,
+        file_name=file_name,
+        file_path=file_path,
+        file_content=file_content,
+        version_number=4
+    )
+
+
+def file_upload_and_assert(api_client, user, file_name, file_path, file_content, version_number):
+    """
+    Helper function to assert file upload response.
+    """
+    file = SimpleUploadedFile(name=file_name, content=file_content)
     api_client.force_authenticate(user=user)
 
     file_data = {
@@ -25,12 +53,11 @@ def test_file_upload(api_client, user):
 
     assert response.status_code == status.HTTP_201_CREATED
 
-
     hasher = hashlib.sha256()
     hasher.update(file_content)
     hasher.update(str(user.id).encode())
 
     assert response_data['file_name'] == file_name
     assert response_data['file_path'] == file_path
-    assert response_data['version_number'] == 1
+    assert response_data['version_number'] == version_number
     assert response_data['file_hash'] == hasher.hexdigest()

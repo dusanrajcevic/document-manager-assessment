@@ -40,6 +40,13 @@ def file_versions(db, file) -> list[FileVersion]:
     return FileVersionFactory.create_batch(3, file=file)
 
 
+@pytest.fixture(scope="function")
+def file_with_versions(db, user) -> File:
+    file = FileFactory(uploaded_by=user)
+    FileVersionFactory.create_batch(3, file=file)
+    return file
+
+
 @pytest.fixture
 def api_client():
     return APIClient()

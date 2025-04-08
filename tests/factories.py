@@ -59,7 +59,6 @@ class FileVersionFactory(DjangoModelFactory):
         model = FileVersion
 
     file = SubFactory(FileFactory)
-    version_number = FactorySequence(lambda n: n + 1)
 
     file_content = FileField(
         from_func=lambda: io.BytesIO(f"File content {random.randint(1, 100000)}".encode())

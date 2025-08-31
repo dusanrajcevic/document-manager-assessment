@@ -1,15 +1,39 @@
-import './App.css';
-import FileVersions from './FileVersions'
-
+import React, {useEffect} from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import FileVersions from './Components/FileVersions';
+import Login from "./Components/Login";
+import Logout from "./Components/Logout";
+import Navigation from "./Components/Layout/Navigation";
+import FileUpload from "./Components/FileUpload";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <FileVersions />
-      </header>
-    </div>
-  );
+    // Fetch the CSRF token when the app loads
+    useEffect(() => {
+        const baseUrl = process.env.REACT_APP_API_BASE_URL;
+        const fetchCsrfToken = async () => {
+            await fetch(`${baseUrl}/api-auth/login/`, {
+                method: "GET",
+                credentials: "include", // Include cookies
+            });
+        };
+
+        fetchCsrfToken();
+    }, []);
+    return (
+        <Router>
+            <header>
+                <Navigation />
+            </header>
+            <main>
+                <Routes>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/" element={<FileVersions/>}/>
+                    <Route path="/upload" element={<FileUpload />} />
+                    <Route path="/logout" element={<Logout/>}/>
+                </Routes>
+            </main>
+        </Router>
+    );
 }
 
 export default App;

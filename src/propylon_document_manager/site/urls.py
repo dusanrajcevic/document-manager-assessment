@@ -1,18 +1,20 @@
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
-from django.views import defaults as default_views
-from django.views.generic import TemplateView
+from django.urls import include, path, re_path
 from rest_framework.authtoken.views import obtain_auth_token
+from propylon_document_manager.file_versions.api.views import serve_file_version
 
 # API URLS
 urlpatterns = [
+    # Admin interface
+    path("admin/", admin.site.urls),
     # API base url
     path("api/", include("propylon_document_manager.site.api_router")),
     # DRF auth token
     path("api-auth/", include("rest_framework.urls")),
     path("auth-token/", obtain_auth_token),
+
+    re_path(r"^documents/(?P<file_path>.+)$", serve_file_version, name="serve_file_version"),
 ]
 
 if settings.DEBUG:

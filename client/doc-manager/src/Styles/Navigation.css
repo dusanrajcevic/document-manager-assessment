@@ -1,0 +1,26 @@
+header>nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #222;
+  margin-bottom: 1rem;
+}
+
+header>nav>ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+header>nav>ul>li>a {
+  color: #fff;
+  text-decoration: none;
+}
+
+header>nav>ul>li>a:hover {
+  color: #aaa;
+  text-decoration: none;
+}
+
+
